@@ -1,4 +1,4 @@
-class Soup {
+export class Soup {
     tomatoes: number;
     onions: number;
     isCooked: boolean;

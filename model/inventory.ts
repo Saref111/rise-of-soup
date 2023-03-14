@@ -1,4 +1,4 @@
-class Inventory {
+export class Inventory {
     tomatoes: number;
     onions: number;
     constructor(tomatoes: number, onions: number) {

@@ -1,7 +1,7 @@
 import { GameController } from "./game.js";
 
 export enum Commands {
-    START = "start",
+    PPERPARE = "prepare",
     COOK = "cook",
     SERVE = "serve",
     BUY = "buy",
@@ -11,7 +11,7 @@ interface Command {
     execute(): void;
 }
 
-class StartGameCommand implements Command {
+class PrepareToCookCommand implements Command {
     private gameController: GameController;
 
     constructor(gameController: GameController) {
@@ -19,7 +19,7 @@ class StartGameCommand implements Command {
     }
 
     execute() {
-        this.gameController.start();
+        this.gameController.prepareToCook();
     }
 }
 class CookSoupCommand implements Command {
@@ -64,6 +64,7 @@ export class InputHandler {
     constructor(gameController: GameController) {
         this.commands = {
             [Commands.COOK]: new CookSoupCommand(gameController),
+            [Commands.PPERPARE]: new PrepareToCookCommand(gameController),
             [Commands.SERVE]: new ServeCostumerCommand(gameController),
             [Commands.BUY]: new BuyProductsCommand(gameController),
         };

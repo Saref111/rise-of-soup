@@ -2,6 +2,9 @@ import { Customer } from "../model/customer.js";
 import { Inventory } from "../model/inventory.js";
 import { Player } from "../model/player.js";
 import { Soup } from "../model/soup.js";
+import { CustomerScreen } from "../view/customer.js";
+import { InventoryScreen } from "../view/inventory.js";
+import { SoupScreen } from "../view/soup.js";
 import { StartScreen } from "../view/start.js";
 import { Commands, InputHandler } from "./input.js";
 
@@ -33,17 +36,24 @@ export class GameController {
 	  }
 
 	start() {
-		const startScreen = new StartScreen();
-		startScreen.show();
+		new StartScreen().show();
 		const inputHandler = new InputHandler(this);
-		document.addEventListener("smth", (e) => {
-			inputHandler.handleInput('start' as Commands);
-		});
+		const startGame = (e: Event) => {
+			inputHandler.handleInput('prepare' as Commands);
+			document.removeEventListener("keypress", startGame);
+		}
+		document.addEventListener("keypress", startGame);
 	}
 	
 	updateInventory(tomatoes: number, onions: number) {
 		this.inventory.tomatoes += tomatoes;
 		this.inventory.onions += onions;
+		new InventoryScreen().show(this.inventory);
+	}
+
+	prepareToCook() {
+		new InventoryScreen().show(this.inventory);
+		new CustomerScreen().show(this.customers[0]);
 	}
 	
 	cookSoup() {
@@ -52,6 +62,7 @@ export class GameController {
 			this.inventory.onions -= 1;
 			this.soup = new Soup(2, 1);
 			this.soup.cook();
+			new SoupScreen().show(this.soup);
 		}
 	}
 	
@@ -74,4 +85,4 @@ export class GameController {
 
 		this.soup = new Soup(0, 0);
 	}
-	}
+}

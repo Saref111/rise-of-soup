@@ -1,7 +1,7 @@
 export class StartScreen {
 	protected screen: HTMLElement;
   	constructor() {
-		this.screen = document.getElementById('screen') as HTMLElement;
+		this.screen = document.querySelector('.screen') as HTMLElement;
     }
     show() {
 		this.screen.innerHTML = `Welcome to Rise of Soup!

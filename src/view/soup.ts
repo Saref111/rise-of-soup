@@ -1,4 +1,4 @@
-import { Soup } from "../model/soup";
+import { Soup } from "../model/soup.js";
 
 export class SoupScreen {
     show(soup: Soup) {

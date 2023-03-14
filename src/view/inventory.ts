@@ -1,4 +1,4 @@
-import { Inventory } from "../model/inventory";
+import { Inventory } from "../model/inventory.js";
 
 export class InventoryScreen {
     show(inventory: Inventory) {

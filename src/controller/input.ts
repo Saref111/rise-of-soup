@@ -1,4 +1,11 @@
-import { GameController } from "./game";
+import { GameController } from "./game.js";
+
+export enum Commands {
+    START = "start",
+    COOK = "cook",
+    SERVE = "serve",
+    BUY = "buy",
+}
 
 interface Command {
     execute(): void;
@@ -12,11 +19,10 @@ class StartGameCommand implements Command {
     }
 
     execute() {
-        this.gameController.startGame();
+        this.gameController.start();
     }
 }
-
-class PauseGameCommand implements Command {
+class CookSoupCommand implements Command {
     private gameController: GameController;
 
     constructor(gameController: GameController) {
@@ -24,30 +30,51 @@ class PauseGameCommand implements Command {
     }
 
     execute() {
-        this.gameController.pauseGame();
+        this.gameController.cookSoup();
+    }
+}
+
+class ServeCostumerCommand implements Command {
+    private gameController: GameController;
+
+    constructor(gameController: GameController) {
+        this.gameController = gameController;
+    }
+
+    execute() {
+        this.gameController.serveCustomer();
+    }
+}
+class BuyProductsCommand implements Command {
+    private gameController: GameController;
+
+    constructor(gameController: GameController) {
+        this.gameController = gameController;
+    }
+
+    execute() {
+        this.gameController.updateInventory(2, 2);
     }
 }
 
 export class InputHandler {
-    private startGameCommand: Command;
-    private pauseGameCommand: Command;
+    private commands: Record<string, Command> = {};
+
 
     constructor(gameController: GameController) {
-        this.startGameCommand = new StartGameCommand(gameController);
-        this.pauseGameCommand = new PauseGameCommand(gameController);
+        this.commands = {
+            [Commands.COOK]: new CookSoupCommand(gameController),
+            [Commands.SERVE]: new ServeCostumerCommand(gameController),
+            [Commands.BUY]: new BuyProductsCommand(gameController),
+        };
     }
 
-    handleInput(input: string) {
-        switch (input) {
-            case "s":
-                this.startGameCommand.execute();
-                break;
-            case "p":
-                this.pauseGameCommand.execute();
-                break;
-            default:
-                console.log("Invalid input");
-                break;
+    handleInput(input: Commands) {
+        try {
+            this.commands[input].execute();
+        } catch (error) {
+            console.log("Invalid input", error);
         }
+       
     }
 }

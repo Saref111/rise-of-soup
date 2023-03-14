@@ -1,4 +1,4 @@
-import { Customer } from "../model/customer";
+import { Customer } from "../model/customer.js";
 
 export class CustomerScreen {
     show(customer: Customer) {

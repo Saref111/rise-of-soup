@@ -1,4 +1,4 @@
-import { Inventory } from "./inventory";
+import { Inventory } from "./inventory.js";
 
 export class Customer {
 	name: string;

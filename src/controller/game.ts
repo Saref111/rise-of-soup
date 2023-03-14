@@ -1,9 +1,9 @@
-import { Customer } from "../model/customer";
-import { Inventory } from "../model/inventory";
-import { Player } from "../model/player";
-import { Soup } from "../model/soup";
-import { StartScreen } from "../view/start";
-import { InputHandler } from "./input";
+import { Customer } from "../model/customer.js";
+import { Inventory } from "../model/inventory.js";
+import { Player } from "../model/player.js";
+import { Soup } from "../model/soup.js";
+import { StartScreen } from "../view/start.js";
+import { Commands, InputHandler } from "./input.js";
 
 export class GameController {
 	private static instance: GameController;
@@ -36,8 +36,8 @@ export class GameController {
 		const startScreen = new StartScreen();
 		startScreen.show();
 		const inputHandler = new InputHandler(this);
-		document.addEventListener("smth", (data) => {
-			inputHandler.handleInput(data.toString().trim());
+		document.addEventListener("smth", (e) => {
+			inputHandler.handleInput('start' as Commands);
 		});
 	}
 	
@@ -55,8 +55,8 @@ export class GameController {
 		}
 	}
 	
-	serveCustomer(customerIndex: number) {
-		const customer = this.customers[customerIndex];
+	serveCustomer() {
+		const customer = this.customers.pop();
 
 		if (
 			customer.preferences.tomatoes === this.soup.tomatoes &&

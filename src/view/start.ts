@@ -1,10 +1,13 @@
 export class StartScreen {
-	protected screen: HTMLElement;
+	protected element: HTMLElement;
   	constructor() {
-		this.screen = document.querySelector('.screen') as HTMLElement;
+		this.element = document.querySelector('.text') as HTMLElement;
     }
     show() {
-		this.screen.innerHTML = `Welcome to Rise of Soup!
+		this.element.innerHTML = `Welcome to Rise of Soup!
 								Press any key to start the game.`;	
-    }	
+    }
+	clear() {
+		this.element.innerHTML = '';
+	}
   }

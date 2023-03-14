@@ -36,10 +36,12 @@ export class GameController {
 	  }
 
 	start() {
-		new StartScreen().show();
+		const startScreen = new StartScreen();
+		startScreen.show();
 		const inputHandler = new InputHandler(this);
 		const startGame = (e: Event) => {
 			inputHandler.handleInput('prepare' as Commands);
+			startScreen.clear();
 			document.removeEventListener("keypress", startGame);
 		}
 		document.addEventListener("keypress", startGame);

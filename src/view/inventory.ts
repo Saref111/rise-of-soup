@@ -1,8 +1,11 @@
 import { Inventory } from "../model/inventory.js";
 
 export class InventoryScreen {
+  protected element: HTMLElement;
+  	constructor() {
+		  this.element = document.querySelector('.inventory') as HTMLElement;
+    }
     show(inventory: Inventory) {
-		console.log(`Tomatoes: ${inventory.tomatoes}`);
-		console.log(`Onions: ${inventory.onions}`);
+      this.element.innerHTML = `Tomatoes: ${inventory.tomatoes}\n Onions: ${inventory.onions}`;
     }
   }

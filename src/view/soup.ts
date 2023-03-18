@@ -8,4 +8,7 @@ export class SoupScreen {
 	show(soup: Soup) {		
 		this.element.innerHTML = `SOUP:\n Tomatoes: ${soup.tomatoes}\n Onions: ${soup.onions}\n Cooked: ${soup.isCooked}`; 
 	}
+	clear() {
+		this.element.innerHTML = '';
+	}
 }

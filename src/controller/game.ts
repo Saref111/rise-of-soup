@@ -1,4 +1,4 @@
-import { Customer } from "../model/customer.js";
+import { Customer, CustomerFactoryProducer } from "../model/customer.js";
 import { Inventory } from "../model/inventory.js";
 import { Player } from "../model/player.js";
 import { Soup } from "../model/soup.js";
@@ -18,7 +18,18 @@ export class GameController {
 	customers: Customer[];
 
 	protected constructor() {
-		this.player = new Player('Player', 100);
+		this.reset();
+	}
+
+	public static getInstance(): GameController {
+		if (!GameController.instance) {
+		  GameController.instance = new GameController();
+		}
+		return GameController.instance;
+	}
+
+	reset() {
+		this.player = new Player('Player', 30);
 		this.inventory = new Inventory(2, 2);
 		this.soup = new Soup(0, 0);
 		this.customers = [
@@ -30,27 +41,43 @@ export class GameController {
 		];
 	}
 
-	public static getInstance(): GameController {
-		if (!GameController.instance) {
-		  GameController.instance = new GameController();
-		}
-		return GameController.instance;
-	  }
-
-	start() {
+	start(isFromRestart = false) {
 		const startScreen = new StartScreen();
-		startScreen.show();
+		startScreen.show(isFromRestart);
 		const inputHandler = new InputHandler(this);
 		const startGame = (e: Event) => {
-			inputHandler.handleInput(Commands.PREPARE);
 			startScreen.clear();
+			this.reset();
+			this.updateView();
 			new ControlsScreen().show(inputHandler);
 			document.removeEventListener("keypress", startGame);
 		}
 		document.addEventListener("keypress", startGame);
 	}
 
+	checkIsGameOver() {
+		const customer = this.customers[0];
+		return this.player.money <= 0 && 
+				this.inventory.tomatoes <= 0 && 
+				this.inventory.onions <= 0 && 
+				this.soup.tomatoes < customer.preferences.tomatoes && 
+				this.soup.onions < customer.preferences.onions;
+	}
+
+	clearView() {
+		new PlayerScreen().clear();
+		new InventoryScreen().clear();
+		new SoupScreen().clear();
+		new CustomerScreen().clear();
+		new ControlsScreen().clear();
+	}
+
 	updateView() {
+		if (this.checkIsGameOver()) {
+			this.clearView()
+			this.start(true);
+			return;
+		}
 		new InventoryScreen().show(this.inventory);
 		new CustomerScreen().show(this.customers[0]);
 		new SoupScreen().show(this.soup);
@@ -58,42 +85,62 @@ export class GameController {
 	}
 	
 	updateInventory(tomatoes: number, onions: number) {
+		const totalPrice = (tomatoes * 10) + (onions * 5);
+		if (this.player.money < totalPrice) return;
+		this.player.money -= totalPrice; 
 		this.inventory.tomatoes += tomatoes;
 		this.inventory.onions += onions;
-		new InventoryScreen().show(this.inventory);
+		this.updateView();
 	}
 
 	prepareToCook() {
-		this.updateView()
+		if (
+			this.inventory.tomatoes >= 1 && 
+			this.inventory.onions >= 1
+		) {
+			this.soup = new Soup(this.soup.tomatoes + 1, this.soup.onions + 1);
+			this.inventory.onions -= 1;
+			this.inventory.tomatoes -= 1;
+			this.updateView();
+		}
 	}
 	
 	cookSoup() {
-		if (this.inventory.tomatoes >= 2 && this.inventory.onions >= 1) {
-			this.inventory.tomatoes -= 2;
-			this.inventory.onions -= 1;
-			this.soup = new Soup(2, 1);
+		if (this.soup.tomatoes > 0 && this.soup.onions > 0) {
 			this.soup.cook();
 			new SoupScreen().show(this.soup);
 		}
 	}
 	
 	serveCustomer() {
-		const customer = this.customers.pop();
+		if (!this.soup.isCooked) return;
+		
+		const customer = this.customers[0];
 
 		if (
-			customer.preferences.tomatoes === this.soup.tomatoes &&
-			customer.preferences.onions === this.soup.onions &&
-			this.soup.isCooked
+			customer.preferences.tomatoes <= this.soup.tomatoes &&
+			customer.preferences.onions <= this.soup.onions
+
 		) {
 			const score = Math.floor(
 				(customer.preferences.tomatoes + customer.preferences.onions) / 2
 			);
 			this.player.score += score;
-			this.player.money += score * 10;
+			this.player.money += score * 15;
 		} else {
-			this.player.money -= 10;
+			this.player.money -= 15;
+		}
+		this.customers.shift()
+
+		if (this.customers.length === 0) {
+			this.customers = []
+
+			for (let i = 0; i < 5; i++) {
+				this.customers.push(CustomerFactoryProducer.getFactory(Math.random() > 0.5).createCustomer());
+			}
 		}
 
 		this.soup = new Soup(0, 0);
+		this.updateView();
 	}
 }

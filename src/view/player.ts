@@ -8,4 +8,7 @@ export class PlayerScreen {
     show(player: Player) {
         this.element.innerHTML = `PLAYER:\n Name: ${player.name}\n  Money: ${player.money} \n Score: ${player.score}`;
     }
+    clear() {
+		this.element.innerHTML = '';
+	}
 }

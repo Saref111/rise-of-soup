@@ -24,8 +24,11 @@ export class ControlsScreen {
         serveButton.addEventListener("click", callbacks[Commands.SERVE]);
 
         this.element.appendChild(buyButton);
-        this.element.appendChild(cookButton);
         this.element.appendChild(prepareButton);
+        this.element.appendChild(cookButton);
         this.element.appendChild(serveButton);
     }
+    clear() {
+		this.element.innerHTML = '';
+	}
 }

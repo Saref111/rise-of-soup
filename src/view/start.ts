@@ -3,8 +3,8 @@ export class StartScreen {
   	constructor() {
 		this.element = document.querySelector('.text') as HTMLElement;
     }
-    show() {
-		this.element.innerHTML = `Welcome to Rise of Soup!
+    show(isFromRestart?: boolean) {
+		this.element.innerHTML = `${isFromRestart ? 'You lose' : 'Welcome to Rise of Soup!'}
 								Press any key to start the game.`;	
     }
 	clear() {

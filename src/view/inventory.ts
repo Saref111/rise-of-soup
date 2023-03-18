@@ -8,5 +8,8 @@ export class InventoryScreen {
 	show(inventory: Inventory) {
 		this.element.innerHTML = `INVENTORY:\n Tomatoes: ${inventory.tomatoes}\n Onions: ${inventory.onions}`;
 	}
+	clear() {
+		this.element.innerHTML = '';
+	}
 }	
  

@@ -17,7 +17,7 @@ export class GameController {
 
 	protected constructor() {
 		this.player = new Player('Player', 100);
-		this.inventory = new Inventory(0, 0);
+		this.inventory = new Inventory(2, 2);
 		this.soup = new Soup(0, 0);
 		this.customers = [
 			new Customer("Bob", new Inventory(2, 1)),

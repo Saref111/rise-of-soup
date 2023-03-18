@@ -6,6 +6,6 @@ export class CustomerScreen {
 		this.element = document.querySelector('.costumer') as HTMLElement;
 	}
     show(customer: Customer) {
-		this.element.innerHTML = `Name: ${customer.name}\n Tomatoes: ${customer.preferences.tomatoes}\n Onions: ${customer.preferences.onions}`;
+		this.element.innerHTML = `CLIENT: \nName: ${customer.name}\n Tomatoes: ${customer.preferences.tomatoes}\n Onions: ${customer.preferences.onions}`;
     }
   }

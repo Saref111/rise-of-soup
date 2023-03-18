@@ -1,7 +1,7 @@
 import { GameController } from "./game.js";
 
 export enum Commands {
-    PPERPARE = "prepare",
+    PREPARE = "prepare",
     COOK = "cook",
     SERVE = "serve",
     BUY = "buy",
@@ -53,7 +53,7 @@ class BuyProductsCommand implements Command {
     }
 
     execute() {
-        this.gameController.updateInventory(2, 2);
+        this.gameController.updateInventory(1, 1);
     }
 }
 
@@ -64,7 +64,7 @@ export class InputHandler {
     constructor(gameController: GameController) {
         this.commands = {
             [Commands.COOK]: new CookSoupCommand(gameController),
-            [Commands.PPERPARE]: new PrepareToCookCommand(gameController),
+            [Commands.PREPARE]: new PrepareToCookCommand(gameController),
             [Commands.SERVE]: new ServeCostumerCommand(gameController),
             [Commands.BUY]: new BuyProductsCommand(gameController),
         };
@@ -76,6 +76,22 @@ export class InputHandler {
         } catch (error) {
             console.log("Invalid input", error);
         }
-       
+    }
+
+    getCallbacks() {
+        return {
+            [Commands.BUY]: () => {
+                this.handleInput(Commands.BUY);
+            },
+            [Commands.COOK]: () => {
+                this.handleInput(Commands.COOK);
+            },
+            [Commands.PREPARE]: () => {
+                this.handleInput(Commands.PREPARE);
+            },
+            [Commands.SERVE]: () => {
+                this.handleInput(Commands.SERVE);
+            }
+        } as Record<Commands, () => void>;
     }
 }

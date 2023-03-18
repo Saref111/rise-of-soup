@@ -21,16 +21,22 @@
             border: 1px solid black;
             display: flex;
             justify-content: center; 
+            flex-wrap: wrap;
         }
         .screen div {
             max-width: 100px;
             position: relative;
             overflow: hidden;
         }
+
+        .controls {
+            min-width: 100%;
+        }
     </style>
 </head>
 <body>
     <div class="screen">
+        <div class="player"></div>
         <div class="inventory"></div>
         <div class="soup"></div>
         <div class="costumer"></div>

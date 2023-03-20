@@ -5,6 +5,7 @@ const NAMES = ["Bob", "Alice", "Charlie", "Dave", "Eve"];
 export class Customer {
 	name: string;
 	preferences: Inventory;
+	vip: boolean = false;
 
 	constructor(name: string, preferences: Inventory) {
 		this.name = name;
@@ -14,6 +15,7 @@ export class Customer {
 
 class VIPCustomer extends Customer {
 	vip: boolean = true;
+	
 	constructor(name: string, preferences: Inventory) {
 		super(name, preferences);
 	}

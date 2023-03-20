@@ -1,4 +1,4 @@
-import { GameController } from "./game.js";
+import { GameController } from "./game-controller/game.js";
 
 export enum Commands {
     PREPARE = "prepare",

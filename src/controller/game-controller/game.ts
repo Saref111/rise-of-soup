@@ -1,14 +1,15 @@
-import { Customer, CustomerFactoryProducer } from "../model/customer.js";
-import { Inventory } from "../model/inventory.js";
-import { Player } from "../model/player.js";
-import { Soup } from "../model/soup.js";
-import { ControlsScreen } from "../view/controls.js";
-import { CustomerScreen } from "../view/customer.js";
-import { InventoryScreen } from "../view/inventory.js";
-import { PlayerScreen } from "../view/player.js";
-import { SoupScreen } from "../view/soup.js";
-import { StartScreen } from "../view/start.js";
-import { Commands, InputHandler } from "./input.js";
+import { Customer, CustomerFactoryProducer } from "../../model/customer.js";
+import { Inventory } from "../../model/inventory.js";
+import { Player } from "../../model/player.js";
+import { Soup } from "../../model/soup.js";
+import { ControlsScreen } from "../../view/controls.js";
+import { CustomerScreen } from "../../view/customer.js";
+import { InventoryScreen } from "../../view/inventory.js";
+import { PlayerScreen } from "../../view/player.js";
+import { SoupScreen } from "../../view/soup.js";
+import { StartScreen } from "../../view/start.js";
+import { Commands, InputHandler } from "../input.js";
+import { ServingClientStrategy, ServingStrategyContext, ServingVipClientStrategy } from "./sereving-strategy.js";
 
 export class GameController {
 	private static instance: GameController;
@@ -29,7 +30,7 @@ export class GameController {
 	}
 
 	reset() {
-		this.player = new Player('Player', 30);
+		this.player = new Player('Player', 50);
 		this.inventory = new Inventory(2, 2);
 		this.soup = new Soup(0, 0);
 		this.customers = [
@@ -117,19 +118,16 @@ export class GameController {
 		
 		const customer = this.customers[0];
 
-		if (
-			customer.preferences.tomatoes <= this.soup.tomatoes &&
-			customer.preferences.onions <= this.soup.onions
+		const servingStrategyContext = new ServingStrategyContext();
 
-		) {
-			const score = Math.floor(
-				(customer.preferences.tomatoes + customer.preferences.onions) / 2
-			);
-			this.player.score += score;
-			this.player.money += score * 15;
+		if (customer.vip) {
+			servingStrategyContext.setStrategy(new ServingVipClientStrategy());
 		} else {
-			this.player.money -= 15;
+			servingStrategyContext.setStrategy(new ServingClientStrategy());
 		}
+
+		servingStrategyContext.executeStrategy(customer, this.player, this.soup);
+		
 		this.customers.shift()
 
 		if (this.customers.length === 0) {
